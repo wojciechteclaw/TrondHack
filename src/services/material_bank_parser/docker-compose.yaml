@@ -3,23 +3,23 @@ networks:
   localdev:
     external: true
 services: 
-  sample_app_test:
-    build: ./flask_sample
-    image: sample_app_test_img
+  merger_service:
+    build: .
+    image: merger_service
     ports: 
       - "5100:5100"
     networks:
       - localdev
     restart: unless-stopped
-  # ngrok:
-  #   image: wernight/ngrok:latest
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     NGROK_PROTOCOL: http
-  #     NGROK_PORT: sample_app_test:5100
-  #     NGROK_AUTH: ${NGROK_AUTH}
-  #   depends_on:
-  #     - sample_app_test
-  #   networks:
-  #     - default
+  ngrok:
+    image: wernight/ngrok:latest
+    ports:
+      - 4040:4040
+    environment:
+      NGROK_PROTOCOL: http
+      NGROK_PORT: localhost:5100
+      NGROK_AUTH: ${NGROK_AUTH}
+    depends_on:
+      - merger_service
+    networks:
+      - default

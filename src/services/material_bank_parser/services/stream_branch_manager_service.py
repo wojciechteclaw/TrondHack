@@ -19,7 +19,7 @@ class StreamBranchManagerService(metaclass=Singleton):
     
     def register(self):
         self.client = UserAuthorizationService().client
-        self.stage_branch = self.get_branch_model(getenv("STAGE_STREAM_NAME","TrondHack_stage"))
+        self.stage_branch = self.get_branch_model(getenv("STAGE_STREAM_NAME","TrondHack_stage"), "preprocessed")
         self.material_bank_branch = self.get_branch_model(getenv("MATERIAL_BANK_STREAM_NAME","TrondHack_MaterialBank"))
     
     def get_branch_model(self, stream_name, branch_name="main"):
@@ -44,10 +44,9 @@ class StreamBranchManagerService(metaclass=Singleton):
             return None
 
     def merge_stage_with_bank(self):
-        stage_data = self.get_stage_branch_commit(0)
+        stage_data = self.get_stage_branch_commit()
         material_bank_data = self.get_material_bank_branch_commit(0)
-        
-        commit_merge_model = CommitMergeModel(material_bank_data, stage_data)
+        commit_merge_model = CommitMergeModel(material_bank_data, stage_data).merge()
         object_to_send_id = operations.send(commit_merge_model, 
                                             [ServerTransport(self.material_bank_branch.stream.id, 
                                                              UserAuthorizationService().client)]
@@ -60,4 +59,4 @@ class StreamBranchManagerService(metaclass=Singleton):
          
     @staticmethod
     def get_bank_commit_message():
-        return f"Bank refres {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        return f"Bank refresh {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
