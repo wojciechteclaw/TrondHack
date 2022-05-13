@@ -11,9 +11,11 @@ class CommitMergeModel():
         objects = list()
         if self.material_bank_last_commit:
             objects = self.material_bank_last_commit['@data'][0][0]
-        for new_item in self.new_commit['@data'][0][0]:
-            objects.append(new_item)
-        my_final_object = Base()
-        my_final_object['@data'] = [[objects]]
-        print(my_final_object)
-        return my_final_object
+        if self.new_commit:
+            for new_item in self.new_commit['@data'][0][0]:
+                objects.append(new_item)
+            my_final_object = Base()
+            my_final_object['@data'] = [[objects]]
+            print(my_final_object)
+            return my_final_object
+        return None

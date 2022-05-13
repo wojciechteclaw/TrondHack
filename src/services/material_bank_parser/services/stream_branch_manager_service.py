@@ -19,8 +19,12 @@ class StreamBranchManagerService(metaclass=Singleton):
     
     def register(self):
         self.client = UserAuthorizationService().client
-        self.stage_branch = self.get_branch_model(getenv("STAGE_STREAM_NAME","TrondHack_stage"), "preprocessed")
-        self.material_bank_branch = self.get_branch_model(getenv("MATERIAL_BANK_STREAM_NAME","TrondHack_MaterialBank"))
+
+        self.stage_branch = self.get_branch_model(
+                                getenv("STREAM_NAME_PREPROCESSED","TrondHack"), 
+                                getenv("STAGE_BRANCH_NAME","main"))
+        self.material_bank_branch = self.get_branch_model(
+                                        getenv("STREAM_NAME_MATERIAL_BANK","TrondHack_MATERIAL_BANK"))
     
     def get_branch_model(self, stream_name, branch_name="main"):
         for stream in UserAuthorizationService().client.stream.list():
@@ -37,25 +41,29 @@ class StreamBranchManagerService(metaclass=Singleton):
     def _get_commit(self, branch_model, commit_index):
         transport = ServerTransport(stream_id=branch_model.stream.id, client=UserAuthorizationService().client)
         try:
-            commit_element = branch_model.branch.commits.items[commit_index]
-            data = operations.receive(commit_element.referencedObject, transport)
-            return data
+            if branch_model.branch.commits.totalCount != 0:    
+                commit_element = branch_model.branch.commits.items[commit_index]
+                data = operations.receive(commit_element.referencedObject, transport)
+                return data
+            return None
         except KeyError as e:
             return None
 
     def merge_stage_with_bank(self):
         stage_data = self.get_stage_branch_commit()
-        material_bank_data = self.get_material_bank_branch_commit(0)
+        material_bank_data = self.get_material_bank_branch_commit()
         commit_merge_model = CommitMergeModel(material_bank_data, stage_data).merge()
-        object_to_send_id = operations.send(commit_merge_model, 
-                                            [ServerTransport(self.material_bank_branch.stream.id, 
-                                                             UserAuthorizationService().client)]
-                                            )
-        UserAuthorizationService().client.commit.create(stream_id=self.material_bank_branch.stream.id,
-                                                        object_id=object_to_send_id,
-                                                        message=StreamBranchManagerService.get_bank_commit_message()
-                                                        )   
-        return json.dumps('ok'), 200, {"Content-Type": "application/json"}
+        if commit_merge_model:
+            object_to_send_id = operations.send(commit_merge_model, 
+                                                [ServerTransport(self.material_bank_branch.stream.id, 
+                                                                UserAuthorizationService().client)]
+                                                )
+            UserAuthorizationService().client.commit.create(stream_id=self.material_bank_branch.stream.id,
+                                                            object_id=object_to_send_id,
+                                                            message=StreamBranchManagerService.get_bank_commit_message()
+                                                            )   
+            return json.dumps('ok'), 200, {"Content-Type": "application/json"}
+        return json.dumps('error'), 200, {"Content-Type": "application/json"}
          
     @staticmethod
     def get_bank_commit_message():
