@@ -1,0 +1,25 @@
+version: "3.9"
+networks:
+  localdev:
+    external: true
+services: 
+  merger_service:
+    build: .
+    image: merger_service
+    ports: 
+      - "5100:5100"
+    networks:
+      - localdev
+    restart: unless-stopped
+  ngrok:
+    image: wernight/ngrok:latest
+    ports:
+      - 4040:4040
+    environment:
+      NGROK_PROTOCOL: http
+      NGROK_PORT: localhost:5100
+      NGROK_AUTH: ${NGROK_AUTH}
+    depends_on:
+      - merger_service
+    networks:
+      - default
