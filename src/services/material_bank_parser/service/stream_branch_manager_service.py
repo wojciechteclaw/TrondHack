@@ -5,8 +5,8 @@ from specklepy.transports.server import ServerTransport
 from specklepy.api import operations
 
 from models.commit_merge_model import CommitMergeModel
-from services.singleton import Singleton
-from services.user_authorization_service import UserAuthorizationService
+from service.singleton import Singleton
+from service.user_authorization_service import UserAuthorizationService
 from models.branch_model import BranchModel
 
 

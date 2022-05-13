@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 
 from commands.merge_stage_with_bank_command import MergeStageWithBankCommand
 from command_handlers.merge_stage_with_bank_command_handler import MergeStageWithBankCommandHandler
-from services.health_check import HealthChecker
-from services.stream_branch_manager_service import StreamBranchManagerService
-from services.user_authorization_service import UserAuthorizationService
+from service.health_check import HealthChecker
+from service.stream_branch_manager_service import StreamBranchManagerService
+from service.user_authorization_service import UserAuthorizationService
 
 
 load_dotenv('./.env')

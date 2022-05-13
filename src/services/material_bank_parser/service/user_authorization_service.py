@@ -2,7 +2,7 @@ from os import getenv
 from specklepy.api.client import SpeckleClient
 from specklepy.api.credentials import get_default_account
 
-from services.singleton import Singleton
+from service.singleton import Singleton
 
 
 class UserAuthorizationService(metaclass=Singleton):
