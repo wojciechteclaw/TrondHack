@@ -33,4 +33,4 @@ def health_check() -> str:
     return HealthChecker.check_health()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=getenv("PORT", 5010))
+    app.run(debug=True, port=int(getenv("PORT", 5100)))
