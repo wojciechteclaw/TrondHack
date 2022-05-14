@@ -1,7 +1,6 @@
 from os import getenv
 from specklepy.api.client import SpeckleClient
 from specklepy.api.credentials import get_default_account
-
 from service.singleton import Singleton
 
 

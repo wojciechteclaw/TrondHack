@@ -21,7 +21,7 @@ def register():
     UserAuthorizationService().register()
     StreamBranchManagerService().register()
 
-@app.route("/refresh_material_bank", methods=["POST"])
+@app.route("/refresh", methods=["POST", "GET"])
 def refresh_material_bank():
     try:
         return mediator.send(MergeStageWithBankCommand())
