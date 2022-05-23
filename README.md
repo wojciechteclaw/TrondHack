@@ -1,6 +1,6 @@
 # S.A.M.B.A. - Speckle as Material Bank App
 
-This is the result of a 3-days work on the Speckle hackathon "Into the Speckleverse" https://hack.speckle.dev/, where we* protoyped the solution called SAMBA.
+This is the result of a 3-days work on the Speckle hackathon "Into the Speckleverse" https://hack.speckle.dev/, where we* protoyped the solution called SAMBA. We won in the category: "Biggest Impact on a Social Problem". You can watch our presentation here: https://www.youtube.com/watch?v=fFKIhNaLEvU&t=174s&ab_channel=CSDGNTNU
 
 We* are engineers and architects who on daily basis research how to make buildings more sustainable. One way to do that is by applying circular practices, in particular - the reuse of building components. But this is not that easy. First you need to know what elements are available. Then there is a challange of mapping those to your new design. 
 
